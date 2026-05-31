@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SIFT — Privacy Policy</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      max-width: 760px; margin: 40px auto; padding: 0 20px;
+      line-height: 1.6; color: #1f2937; background: #fff;
+    }
+    @media (prefers-color-scheme: dark) {
+      body { color: #e5e7eb; background: #0f1216; }
+      h1, h2 { color: #f3f4f6; }
+      a { color: #34d399; }
+      table { border-color: #2a313a; }
+      th, td { border-color: #2a313a; }
+      th { background: #1b1f24; }
+      code { background: #1b1f24; color: #fca5a5; }
+    }
+    h1 { font-size: 28px; margin-bottom: 4px; }
+    h2 { font-size: 20px; margin-top: 32px; border-bottom: 1px solid rgba(128,128,128,0.2); padding-bottom: 6px; }
+    .updated { color: #6b7280; font-size: 14px; margin-bottom: 24px; }
+    table { border-collapse: collapse; width: 100%; margin: 12px 0; }
+    th, td { border: 1px solid #e5e7eb; padding: 8px 10px; text-align: left; vertical-align: top; font-size: 14px; }
+    th { background: #f3f4f6; font-weight: 600; }
+    code { background: #f3f4f6; padding: 1px 6px; border-radius: 4px; font-size: 90%; }
+    a { color: #059669; }
+    ul { padding-left: 22px; }
+    li { margin: 4px 0; }
+    .tldr { background: rgba(16, 185, 129, 0.08); padding: 12px 16px; border-radius: 8px; border-left: 3px solid #10b981; }
+  </style>
+</head>
+<body>
+
+<h1>SIFT Privacy Policy</h1>
+<div class="updated">Last updated: 2026-05-31</div>
+
+<p>SIFT (“we”, “the extension”) is a browser extension that helps you search, organize and save conversations on ChatGPT and Claude. This policy explains what data we collect, why, and what we do not do with it.</p>
+
+<h2>TL;DR</h2>
+<div class="tldr">
+<table>
+  <tr><th>What</th><th>Where it lives</th></tr>
+  <tr><td>Your chats, folder structure, tags, saved messages</td><td><strong>Only on your device</strong> (browser <code>localStorage</code>)</td></tr>
+  <tr><td>Your email, subscription state, hashed device fingerprint</td><td>Our backend (Firebase Firestore + Cloudflare Workers) — used solely for license &amp; abuse prevention</td></tr>
+  <tr><td>The text of any ChatGPT or Claude conversation</td><td><strong>Never sent to us</strong></td></tr>
+  <tr><td>Anonymous analytics / tracking / advertising</td><td><strong>None</strong></td></tr>
+</table>
+</div>
+
+<h2>1. What we store on your device</h2>
+<p>Everything related to the extension’s actual features stays in your browser:</p>
+<ul>
+  <li>The list of conversations the extension has seen on the host page</li>
+  <li>Folders (including nested subfolders) you create</li>
+  <li>Tags you assign</li>
+  <li>Saved / favourited messages</li>
+  <li>UI preferences (sidebar open/closed, last active tab, etc.)</li>
+</ul>
+<p>This data lives in the page-origin <code>localStorage</code>. We do not read it, do not transmit it, and cannot recover it for you if your browser clears site data.</p>
+
+<h2>2. What we store on our server</h2>
+<p>When you sign in with Google we create one record per account, holding:</p>
+<ul>
+  <li><strong>Email address</strong> — to identify your account for licensing</li>
+  <li><strong>Google account identifier</strong> (provided by Google sign-in)</li>
+  <li><strong>Account creation date</strong> + <strong>trial end date</strong></li>
+  <li><strong>Subscription status</strong> (trial / paid / device-limit)</li>
+  <li><strong>Number of paid devices</strong> and a <strong>hash of each device’s fingerprint</strong> (see §3)</li>
+  <li><strong>License key + activation ID</strong> from Polar.sh for each paid device</li>
+</ul>
+<p>This record is held in Google Firebase (Authentication + Firestore). The license-verification logic runs on a Cloudflare Worker that does not persist any user data of its own.</p>
+
+<h2>3. Device fingerprint — what it is and isn’t</h2>
+<p>To prevent the same person creating unlimited accounts to abuse the free trial, we compute a hash from a small set of browser characteristics on sign-in:</p>
+<ul>
+  <li>The output of a fixed canvas drawing operation</li>
+  <li>The WebGL renderer name reported by your GPU</li>
+  <li>User-agent string</li>
+  <li>Timezone</li>
+  <li>Screen size &amp; color depth</li>
+  <li>Hardware concurrency (number of logical CPUs)</li>
+  <li>Browser platform name</li>
+</ul>
+<p>These values are immediately combined and SHA-256 hashed into a 64-character string before they leave your browser. <strong>The raw values themselves are never transmitted or stored.</strong> The hash is stored alongside your account record solely to count distinct devices for licensing.</p>
+
+<h2>4. What we never collect</h2>
+<ul>
+  <li>The text, titles, or summaries of any conversation you have with ChatGPT or Claude</li>
+  <li>Your IP address (beyond what is unavoidably logged transiently by Firebase / Cloudflare for abuse prevention; both delete those logs per their retention policy)</li>
+  <li>Browsing history outside the host pages (chatgpt.com, chat.openai.com, claude.ai)</li>
+  <li>Anything from any other website</li>
+  <li>Tracking identifiers shared with advertising networks (there are none)</li>
+</ul>
+
+<h2>5. Payments</h2>
+<p>When you upgrade, payment is handled by <strong>Polar.sh</strong> (the merchant of record). You enter your payment details directly on Polar’s checkout page; we never see or store your card number. Polar processes your data under <a href="https://polar.sh/legal/privacy" target="_blank" rel="noopener">their own privacy terms</a>. After purchase, Polar emails you a receipt with a license key — in most cases the SIFT extension activates this device automatically within seconds via a webhook from Polar; the license key in the email is your manual fallback if that ever fails.</p>
+
+<h2>6. Third parties</h2>
+<table>
+  <tr><th>Provider</th><th>Purpose</th><th>What they receive</th></tr>
+  <tr><td>Google Firebase</td><td>Authentication + account database (Firestore)</td><td>Email, device fingerprint hash, subscription state, license keys</td></tr>
+  <tr><td>Cloudflare Workers</td><td>Backend (license verification, checkout, webhook)</td><td>Email + uid + fingerprint relayed during the request only — not persisted on Cloudflare’s side</td></tr>
+  <tr><td>Google Identity</td><td>OAuth (“Continue with Google”)</td><td>Standard Google profile (email, name)</td></tr>
+  <tr><td>Polar.sh</td><td>Payment processing &amp; license issuance (merchant of record)</td><td>Email, order amount, payment details (entered directly on Polar’s form)</td></tr>
+</table>
+<p>No other third parties receive your data.</p>
+
+<h2>7. Your rights</h2>
+<ul>
+  <li><strong>Sign out</strong> — clears all tokens from your browser</li>
+  <li><strong>Delete your account</strong> — email us and we will remove your server record within 30 days (this does not delete the local conversation data, which only you can clear via your browser settings)</li>
+  <li><strong>Export your data</strong> — the extension can export your conversation, folder and saved-message data to Markdown / JSON directly from the sidebar (Settings → Export). For your server record (email, subscription state) email us and we’ll send a JSON copy</li>
+</ul>
+<p>EU/UK residents have additional rights under GDPR/UK-GDPR, including rectification, restriction and portability. Contact us at the email below to exercise them.</p>
+
+<h2>8. Children</h2>
+<p>SIFT is not directed at children under 13. We do not knowingly collect data from anyone under 13. If you believe we have, email us and we will delete the account.</p>
+
+<h2>9. Changes</h2>
+<p>If we make material changes to this policy we will note them at the top of this page and, where required by law, ask you to consent to the new version before continuing to use the extension.</p>
+
+<h2>10. Contact</h2>
+<p><a href="mailto:ibrahimekberov0@gmail.com">ibrahimekberov0@gmail.com</a></p>
+
+</body>
+</html>
